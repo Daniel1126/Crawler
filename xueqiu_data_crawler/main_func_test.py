@@ -4,7 +4,6 @@ Created on Mon Jul 22 10:43:12 2019
 
 @author: Daniel
 """
-
 from data import TechData
 
 if __name__ == '__main__':
