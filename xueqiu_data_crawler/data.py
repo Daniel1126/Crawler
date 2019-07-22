@@ -13,12 +13,12 @@ import numpy as np
 import pandas as pd
 
 class TechData(object):
-    def __init__(self,symbol,begin='20190719',period='day',type_='before',count=1000,indicator='kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance'):
+    def __init__(self,symbol,begin='20190722',period='day',type_='before',count=1000,indicator='kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance'):
         '''
         调用实例
         df = Crawler(symbol='AG',begin='20190719',period='day',type_='before',count=1000,indicator='').request()   
         symbol：股票代码，忽略代码的大小写
-        begin：最新数据日期
+        begin：最新数据日期，调用格式为 '20190722'
         period：需要数据类型 -- 时间框架，默认为日线
         type_：默认before，指的是从最新日期数据之前
         count：需要数据的数量
