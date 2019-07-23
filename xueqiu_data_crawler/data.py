@@ -17,7 +17,7 @@ class TechData(object):
         '''
         调用实例
         df = Crawler(symbol='AG',begin='20190719',period='day',type_='before',count=1000,indicator='').request()   
-        symbol：股票代码，忽略代码的大小写
+        symbol：股票代码，忽略代码的大小写，A股调用需要区分上证或深证，例如三只松鼠：SZ300783，安集科技：SH688019，港股调用，中烟香港：06055
         begin：最新数据日期，调用格式为 '20190722'
         period：需要数据类型 -- 时间框架，默认为日线
         type_：默认before，指的是从最新日期数据之前
