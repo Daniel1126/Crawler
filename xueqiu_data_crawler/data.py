@@ -189,10 +189,4 @@ class MultiTechData(object):
         if len(nan_index) != 0:
             for i in nan_index:
                 df.loc[i,'percent'] = ((df.loc[i,'close'] - df.loc[i-1,'close']) / df.loc[i-1,'close']) * 100
-        return df
-
-if __name__ == '__main__':
-    df = MultiTechData(symbols=['00700','SZ000651','AAPL','SZ002507','SH601318'],begin='20190719',period='day',type_='before',count=1000,indicator='',update=False).multi_request(proxy=True)
-    
-    
-        
+        return df 
