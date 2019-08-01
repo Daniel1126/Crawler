@@ -178,6 +178,7 @@ class MultiTechData(object):
         df.timestamp = df.timestamp.apply(lambda x: datetime.fromtimestamp(x/1000).date())
         df.rename({'timestamp':'time'},axis='columns',inplace=True)
         df = self.check_nan(df)
+        df['symbol'] = symbol
         ls.append(df)
         
     
