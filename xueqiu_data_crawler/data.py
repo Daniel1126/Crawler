@@ -9,20 +9,23 @@ from http import cookiejar
 import urllib
 from datetime import datetime
 import json
-import numpy as np
 import pandas as pd
+from Proxy import ProxyIp
+import random
 
 class TechData(object):
-    def __init__(self,symbol,begin='20190722',period='day',type_='before',count=1000,indicator='kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance'):
+    def __init__(self,symbol,begin='20190719',period='day',type_='before',count=1000,indicator='kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance'):
         '''
         调用实例
-        df = Crawler(symbol='AG',begin='20190719',period='day',type_='before',count=1000,indicator='').request()   
+        df = TechData(symbol='AG',begin='20190719',period='day',type_='before',count=1000,indicator='').request(proxy=True,update=False)   
         symbol：股票代码，忽略代码的大小写，A股调用需要区分上证或深证，例如三只松鼠：SZ300783，安集科技：SH688019，港股调用，中烟香港：06055
-        begin：最新数据日期，调用格式为 '20190722'
+        begin：最新数据日期
         period：需要数据类型 -- 时间框架，默认为日线
         type_：默认before，指的是从最新日期数据之前
         count：需要数据的数量
         indicator：爬取数据需要的一些补充指标，例如kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance
+        proxy:是否使用代理
+        update：是否更新代理
         '''
         self.opener = self.opener_build
         self.symbol = symbol.upper()
@@ -55,8 +58,13 @@ class TechData(object):
         
         return url
     
-    def request(self):
+    def request(self,proxy=False,**kwargs):
         opener = self.opener()
+        if proxy:
+            ip_list = ProxyIp().get(num=1,update=kwargs['update'])
+            proxy_ip = random.choice(ip_list)
+            ProxyHandler = urllib.request.ProxyHandler(proxy_ip)
+            opener.add_handler(ProxyHandler)
         webdata = json.loads(opener.open(self.url_build()).read().decode('utf-8'))['data']
         columns = webdata['column']
         item = webdata['item']
