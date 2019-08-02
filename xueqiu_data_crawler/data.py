@@ -119,6 +119,8 @@ class MultiTechData(object):
         self.count = str(-count)
         self.indicator = indicator
         
+        
+        
     
     def opener_build(self):
         cj = cookiejar.CookieJar()
@@ -144,7 +146,7 @@ class MultiTechData(object):
         url = api + data
         
         return url
-    
+        
     def multi_request(self,proxy=False):
         ip_list = self.ip_list
         threads,ls = [[] for _ in range(2)]
@@ -190,4 +192,37 @@ class MultiTechData(object):
         if len(nan_index) != 0:
             for i in nan_index:
                 df.loc[i,'percent'] = ((df.loc[i,'close'] - df.loc[i-1,'close']) / df.loc[i-1,'close']) * 100
-        return df 
+        return df
+
+class IndexData(object):
+    def __init__(self,begin='20190719',period='day',type_='before',count=1000,indicator='kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance',update=False):
+        '''
+        调用实例
+        df = IndexData(begin='20210719',period='day',type_='before',count=1000,indicator='',update=False).request(index='csi300',proxy=True)
+        参数说明见 MultiTechData
+        '''
+        self.csi_300_url = 'http://www.csindex.com.cn/uploads/file/autofile/cons/000300cons.xls'
+        self.csi_500_url = 'http://www.csindex.com.cn/uploads/file/autofile/cons/000905cons.xls'
+        self.sh_50_url   = 'http://www.csindex.com.cn/uploads/file/autofile/cons/000016cons.xls'
+        self.begin= begin
+        self.period= period
+        self.type_= type_
+        self.count= count
+        self.indicator= indicator
+        self.update= update
+    
+    def index_request(self,index='csi300',proxy=True):
+        # 从中正网站上获取最新的CSI300成分股
+        index = index.lower()
+        if index == 'csi300':
+            df = pd.read_excel(self.csi_300_url)
+        elif index == 'csi500':
+            df = pd.read_excel(self.csi_500_url)
+        elif index == 'sh50':
+            df = pd.read_excel(self.sh_50_url)
+        code = df['成分券代码Constituent Code'].apply(lambda x: str(x).rjust(6,'0'))
+        exchange = df['交易所Exchange'].apply(lambda x: x[0]+x[-1])
+        symbols = list(exchange + code) 
+        df = MultiTechData(symbols=symbols,begin=self.begin,period=self.period,type_=self.type_,count=self.count,indicator=self.indicator,update=self.update).multi_request(proxy=True)
+        
+        return df
